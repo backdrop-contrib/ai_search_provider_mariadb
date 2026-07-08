@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * MariaDB native VECTOR provider for AI search.
+ */
+
+/**
+ * Implements hook_autoload_info().
+ */
+function ai_search_mariadb_autoload_info() {
+  return [
+    'MariadbVectorService' => 'includes/MariadbVectorService.inc',
+  ];
+}
+
+/**
+ * Implements hook_search_api_service_info().
+ */
+function ai_search_mariadb_search_api_service_info() {
+  return [
+    'mariadb_vector' => [
+      'name' => t('MariaDB Vector'),
+      'description' => t('MariaDB native VECTOR backend for AI search. Requires MariaDB 11.7+ with the VECTOR data type and VECTOR INDEX support.'),
+      'class' => 'MariadbVectorService',
+      'file' => 'includes/MariadbVectorService.inc',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ai_search_rag_backend_info().
+ *
+ * Without this, mariadb_vector servers are invisible to any RAG consumer
+ * (ai_agents/ai_assistants tools, ai_search_query_backend()) that dispatches
+ * through ai_search_get_rag_backend_definition() — only servers with a
+ * registered backend show up as usable, matching milvus/pinecone.
+ */
+function ai_search_mariadb_ai_search_rag_backend_info() {
+  return [
+    'mariadb_vector' => [
+      'server_classes' => ['mariadb_vector'],
+      'query_callback' => 'ai_search_mariadb_rag_query',
+      'matches_callback' => 'ai_search_mariadb_rag_matches',
+    ],
+  ];
+}
+
+/**
+ * Query callback: run a vector query against a MariaDB backend for ai_search RAG.
+ *
+ * Registered via hook_ai_search_rag_backend_info(); the signature matches the
+ * query_callback contract documented in ai_search.api.php.
+ */
+function ai_search_mariadb_rag_query($server, $index, array $vector, $dimension, $top_k) {
+  if (!class_exists('MariadbVectorService')) {
+    module_load_include('inc', 'ai_search_mariadb', 'includes/MariadbVectorService');
+  }
+  if (!class_exists('MariadbVectorService')) {
+    throw new \Exception('MariaDB vector provider class unavailable. Enable the AI Search MariaDB module.');
+  }
+
+  $service = new MariadbVectorService($server);
+  return $service->queryVector($index, $vector, $top_k);
+}
+
+/**
+ * Matches callback: extract normalized match rows from a MariaDB response.
+ *
+ * Registered via hook_ai_search_rag_backend_info().
+ */
+function ai_search_mariadb_rag_matches($vector_results, $server = NULL, $index = NULL) {
+  if (!empty($vector_results['results']) && is_array($vector_results['results'])) {
+    return array_values($vector_results['results']);
+  }
+  return is_array($vector_results) ? array_values($vector_results) : [];
+}

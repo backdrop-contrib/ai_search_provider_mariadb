@@ -1,0 +1,10 @@
+name = AI Search MariaDB Vector
+description = MariaDB native VECTOR provider for AI search. Requires MariaDB 11.7+ (11.8 LTS recommended).
+backdrop = 1.x
+type = module
+package = AI
+dependencies[] = ai_search
+
+; No custom DB driver needed — MariaDB is Backdrop's native engine.
+; Requires the site (or a dedicated connection) to run on MariaDB >= 11.7
+; with native VECTOR type and VECTOR INDEX support.
