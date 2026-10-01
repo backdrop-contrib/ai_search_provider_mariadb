@@ -47,14 +47,13 @@ CREATE TABLE `search_vector_<index>` (
   MariaDB bakes the metric into the `VECTOR INDEX`. To change it, drop/rebuild
   the table (re-index).
 - **HNSW M:** graph connectivity. Higher = better recall, more storage. Default 6.
-- **Table name:** optional override; otherwise `search_vector_<index machine name>`.
+- **Table name:** optional override; otherwise `search_vector_<index machine name>`. A custom table name must be unique per Search API index.
 
 ## Known limitations
 
 - Metric cannot be changed in place (see above).
 - Only `COSINE` and `L2` are supported (MariaDB has no inner-product distance fn).
-- `deleteItems()` currently maps integer IDs to `entity:node/<id>:en`; extend for
-  non-node entity types if your index includes them.
+- `deleteItems()` accepts raw IDs and canonical IDs for non-node entity types.
 - Not testable on MySQL — needs a real MariaDB 11.7+ instance.
 
 ## Issues
