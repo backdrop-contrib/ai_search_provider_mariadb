@@ -11,6 +11,7 @@ only depends on `ai_search`.
 
 ## Requirements
 
+- PHP 8.2 or later
 - **MariaDB 11.7+** (11.8 LTS recommended — vector search is GA there).
 - The site's default database connection (or a dedicated one) must point at a
   qualifying MariaDB server. **MySQL does not work** — the `VECTOR` type,
