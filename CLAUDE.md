@@ -6,7 +6,7 @@ See `README.md` in this directory for requirements, the auto-created table schem
 
 ## Code Map
 
-- `ai_search_mariadb.module` — `hook_autoload_info()`, `hook_search_api_service_info()` registering the `mariadb_vector` backend
+- `ai_search_provider_mariadb.module` — `hook_autoload_info()`, `hook_search_api_service_info()` registering the `mariadb_vector` backend
 - `includes/MariadbVectorService.inc` — `MariadbVectorService extends SearchApiAbstractService implements AiSearchBackendInterface`. Talks to MariaDB directly via `db_query()` (no separate vector client class, no custom DB driver) — it uses Backdrop's normal DB layer plus MariaDB-only SQL (`VEC_FromText()`, `VEC_DISTANCE_COSINE()`/`VEC_DISTANCE_EUCLIDEAN()`, `VECTOR INDEX`).
 
 ## Known Constraints

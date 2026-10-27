@@ -272,7 +272,7 @@ class MariadbVectorService extends SearchApiAbstractService implements AiSearchB
     $index = $query->getIndex();
     $index_options = isset($index->options) ? $index->options : [];
 
-    $resolved = ai_search_resolve_query_embedding($query, $this->options, 'ai_search_mariadb');
+    $resolved = ai_search_resolve_query_embedding($query, $this->options, 'ai_search_provider_mariadb');
     if ($resolved === NULL) {
       return ['result count' => 0, 'results' => []];
     }
@@ -468,7 +468,7 @@ class MariadbVectorService extends SearchApiAbstractService implements AiSearchB
         $dim = NULL;
       }
       if ($dim && (int) $dim !== (int) $dimension) {
-        watchdog('ai_search_mariadb', 'Existing table @t vector dimension (@d1) differs from configured (@d2). Reindexing is blocked until the table is rebuilt or the embedding dimension is corrected.', ['@t' => $qualified, '@d1' => $dim, '@d2' => $dimension], WATCHDOG_ERROR);
+        watchdog('ai_search_provider_mariadb', 'Existing table @t vector dimension (@d1) differs from configured (@d2). Reindexing is blocked until the table is rebuilt or the embedding dimension is corrected.', ['@t' => $qualified, '@d1' => $dim, '@d2' => $dimension], WATCHDOG_ERROR);
         throw new SearchApiException('MariaDB vector dimension does not match the configured embedding dimension.');
       }
 
