@@ -8,7 +8,7 @@
 /**
  * Implements hook_autoload_info().
  */
-function ai_search_mariadb_autoload_info() {
+function ai_search_provider_mariadb_autoload_info() {
   return [
     'MariadbVectorService' => 'includes/MariadbVectorService.inc',
   ];
@@ -17,7 +17,7 @@ function ai_search_mariadb_autoload_info() {
 /**
  * Implements hook_search_api_service_info().
  */
-function ai_search_mariadb_search_api_service_info() {
+function ai_search_provider_mariadb_search_api_service_info() {
   return [
     'mariadb_vector' => [
       'name' => t('MariaDB Vector'),
@@ -36,12 +36,12 @@ function ai_search_mariadb_search_api_service_info() {
  * through ai_search_get_rag_backend_definition() — only servers with a
  * registered backend show up as usable, matching milvus/pinecone.
  */
-function ai_search_mariadb_ai_search_rag_backend_info() {
+function ai_search_provider_mariadb_ai_search_rag_backend_info() {
   return [
     'mariadb_vector' => [
       'server_classes' => ['mariadb_vector'],
-      'query_callback' => 'ai_search_mariadb_rag_query',
-      'matches_callback' => 'ai_search_mariadb_rag_matches',
+      'query_callback' => 'ai_search_provider_mariadb_rag_query',
+      'matches_callback' => 'ai_search_provider_mariadb_rag_matches',
     ],
   ];
 }
@@ -52,9 +52,9 @@ function ai_search_mariadb_ai_search_rag_backend_info() {
  * Registered via hook_ai_search_rag_backend_info(); the signature matches the
  * query_callback contract documented in ai_search.api.php.
  */
-function ai_search_mariadb_rag_query($server, $index, array $vector, $dimension, $top_k) {
+function ai_search_provider_mariadb_rag_query($server, $index, array $vector, $dimension, $top_k) {
   if (!class_exists('MariadbVectorService')) {
-    module_load_include('inc', 'ai_search_mariadb', 'includes/MariadbVectorService');
+    module_load_include('inc', 'ai_search_provider_mariadb', 'includes/MariadbVectorService');
   }
   if (!class_exists('MariadbVectorService')) {
     throw new \Exception('MariaDB vector provider class unavailable. Enable the AI Search MariaDB module.');
@@ -69,7 +69,7 @@ function ai_search_mariadb_rag_query($server, $index, array $vector, $dimension,
  *
  * Registered via hook_ai_search_rag_backend_info().
  */
-function ai_search_mariadb_rag_matches($vector_results, $server = NULL, $index = NULL) {
+function ai_search_provider_mariadb_rag_matches($vector_results, $server = NULL, $index = NULL) {
   if (!empty($vector_results['results']) && is_array($vector_results['results'])) {
     return array_values($vector_results['results']);
   }
