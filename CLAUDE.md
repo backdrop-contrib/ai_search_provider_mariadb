@@ -1,4 +1,4 @@
-# AI Search MariaDB Vector — Dev Notes
+# AI Search Provider MariaDB — Dev Notes
 
 Vector storage backend for the `ai_search` framework (see `../ai_search/CLAUDE.md` for the overall architecture). This module is its own git repo/project (`backdrop-contrib/ai_search_provider_mariadb`), a sibling of `ai_search`, not a submodule.
 

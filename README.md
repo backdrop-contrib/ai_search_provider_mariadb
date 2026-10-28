@@ -1,4 +1,4 @@
-# AI Search MariaDB Vector
+# AI Search Provider MariaDB
 
 MariaDB native `VECTOR` provider for the Backdrop **AI Search** framework. Stores
 embeddings directly in the site database and runs nearest-neighbor search with
